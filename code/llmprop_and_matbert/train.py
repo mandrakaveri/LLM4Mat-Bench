@@ -22,7 +22,7 @@ import matplotlib.pyplot as plt
 # add the progress bar
 from tqdm import tqdm
 
-from transformers import AdamW
+from torch.optim import AdamW
 from transformers import get_linear_schedule_with_warmup, get_cosine_schedule_with_warmup
 from transformers import AutoTokenizer, T5EncoderModel, T5Tokenizer, BertTokenizerFast, BertModel
 from tokenizers.pre_tokenizers import Whitespace
@@ -339,7 +339,7 @@ def evaluate(
         predictions_tensor = torch.tensor(predictions_list)
         targets_tensor = torch.tensor(targets_list)
         test_performance = mae_loss_function(predictions_tensor.squeeze(), targets_tensor.squeeze())
-        rmse = metrics.mean_squared_error(targets_list, predictions_list, squared=False)
+        rmse = metrics.mean_squared_error(targets_list, predictions_list ) ** 0.5
         r2 = metrics.r2_score(targets_list, predictions_list)
 
         # correlations between targets_list and predictions_list
@@ -608,9 +608,10 @@ if __name__ == "__main__":
         tokenizer.add_tokens(["[NUM]"]) 
 
     #get the length of the longest composition
-    if input_type in ["reduced_formula", "formula_pretty", "formula"]:
-        max_length = get_max_len(pd.concat([train_data, valid_data, test_data]), tokenizer, input_type)
-        print('\nThe longest composition has', max_length, 'tokens\n')
+    if input_type in ["reduced_formula", "formula_pretty", "formula"] or model_name == "matbert":
+   
+        max_length =   512
+    print('\nThe longest composition has', max_length, 'tokens\n')
 
     print('max length:', max_length)
 
@@ -743,14 +744,20 @@ if __name__ == "__main__":
         scheduler = torch.optim.lr_scheduler.LambdaLR(
             optimizer, lambda epoch: 1.0
         )
-    
-    print("======= Training ... ========")
-    # show_gpu("before training")
-    torch.cuda.empty_cache()
-    training_stats, validation_predictions = train(model, optimizer, scheduler, bce_loss_function, mae_loss_function, 
-        epochs, train_dataloader, valid_dataloader, device, normalizer=normalizer_type)
-    # show_gpu('after training')
-    
+    # print("======= Starting training ========")
+    # training_stats, validation_predictions = train(
+#     model,
+#     optimizer,
+#     scheduler,
+#     bce_loss_function,
+#     mae_loss_function,
+#     epochs,
+#     train_dataloader,
+#     valid_dataloader,
+#     device,
+#     normalizer=normalizer_type
+# )
+       
     print("======= Evaluating on test set ========")
     best_model_path = f"{checkpoints_path}/{dataset_name}/{model_name}_best_checkpoint_for_{property}_{task_name}_{input_type}_{preprocessing_strategy}.pt" 
     best_model = Predictor(base_model, base_model_output_size, drop_rate=drop_rate, pooling=pooling, model_name=model_name)
@@ -795,3 +802,6 @@ if __name__ == "__main__":
     saveCSV(pd.DataFrame(test_predictions), f"{results_path}/{dataset_name}/{model_name}_test_stats_for_{property}_{task_name}_{input_type}_{preprocessing_strategy}.csv")
     
     
+
+
+

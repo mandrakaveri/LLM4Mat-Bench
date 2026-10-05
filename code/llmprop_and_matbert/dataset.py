@@ -31,7 +31,7 @@ def tokenize(tokenizer, dataframe, max_length, pooling='cls', input_type='descri
     """
     1. Takes in the the list of input sequences and return 
     the input_ids and attention masks of the tokenized sequences
-    2. max_length = the max length of each input sequence 
+    2. max_length = 512 
     """
     # dataframe['list_of_numbers_in_input'] = dataframe[input_type].apply(get_numbers_in_a_sentence)
     # dataframe[input_type] = dataframe[input_type].apply(replace_numbers_with_num)

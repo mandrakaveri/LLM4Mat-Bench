@@ -1,0 +1,2 @@
+best_epoch,training mae loss,validation mae loss,training time,validation time
+1,1.0787481902713754,"tensor(1.0086, dtype=torch.float64)",0:08:17,0:15:16

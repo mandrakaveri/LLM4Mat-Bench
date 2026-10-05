@@ -1,0 +1,11 @@
+LLM4Mat-Bench - LLM-Prop
+Dataset: mp_test
+Property: band_gap
+Task: Regression
+Input Type: description
+Epochs: 1
+
+Test Metrics:
+MAE  = 1.0052
+RMSE = 1.6129
+R2   = -0.1984

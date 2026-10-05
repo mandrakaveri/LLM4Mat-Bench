@@ -1,0 +1,16 @@
+# Large datasets
+data/mp/*.csv
+data/mp_test/*.csv
+
+# Model checkpoints
+checkpoints/
+
+# Tokenizers and downloaded model files
+tokenizers/
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Temporary files
+*.tmp
